@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String
+  domain    String?   @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Products  Product[]
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Store     Store    @relation(fields: [tenantId], references: [id])
+}
