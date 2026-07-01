@@ -3,7 +3,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
-    const tenantFromHeader = req.headers['x-tenant-id'];
+    const tenantFromHeader = req.user.tenantId;
     if (tenantFromHeader) {
       req.tenantId = tenantFromHeader;
       return next();

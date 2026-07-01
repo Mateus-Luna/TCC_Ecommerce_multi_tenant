@@ -1,16 +1,72 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import * as tenantRequestInterface from '../../common/interfaces/tenant-request.interface';
 
 @Controller('products')
 export class ProductsController {
-    constructor(
+  constructor(
     private readonly productsService: ProductsService,
   ) {}
 
   @Get()
-  findAll(@Req() req) {
-    return this.productsService.findAll(
-      req.tenantId,
+  findAll(@Req() req: tenantRequestInterface.TenantRequest) {
+    return this.productsService.findAll(req.user.tenantId);
+  }
+
+  @Get(':id')
+  findOne(
+    @Param('id') id: string,
+    @Req() req: tenantRequestInterface.TenantRequest,
+  ) {
+    return this.productsService.findOne(
+      id,
+      req.user.tenantId,
+    );
+  }
+
+  @Post()
+  create(
+    @Body() dto: CreateProductDto,
+    @Req() req: tenantRequestInterface.TenantRequest,
+  ) {
+    return this.productsService.create(
+      req.user.tenantId,
+      dto,
+    );
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdateProductDto,
+    @Req() req: tenantRequestInterface.TenantRequest,
+  ) {
+    return this.productsService.update(
+      id,
+      req.user.tenantId,
+      dto,
+    );
+  }
+
+  @Delete(':id')
+  remove(
+    @Param('id') id: string,
+    @Req() req: tenantRequestInterface.TenantRequest,
+  ) {
+    return this.productsService.remove(
+      id,
+      req.user.tenantId,
     );
   }
 }

@@ -14,6 +14,7 @@ model Store {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Products  Product[]
+  users     User[]
 }
 
 model Product {
@@ -24,5 +25,17 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Store     Store    @relation(fields: [tenantId], references: [id])
+
   @@index([tenantId])
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+  storeId  String
+  store    Store  @relation(fields: [storeId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

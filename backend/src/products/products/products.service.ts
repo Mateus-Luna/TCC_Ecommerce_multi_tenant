@@ -1,5 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -7,15 +12,66 @@ export class ProductsService {
 
   async findAll(tenantId: string) {
     return this.prisma.product.findMany({
-      where: { tenantId },
+      where: {
+        tenantId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
-  async create(tenantId: string, data: any) {
+ 
+  async findOne(id: string, tenantId: string) {
+    const product = await this.prisma.product.findFirst({
+      where: {
+        id,
+        tenantId,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException('Produto não encontrado.');
+    }
+
+    return product;
+  }
+
+
+  async create(
+    tenantId: string,
+    dto: CreateProductDto,
+  ) {
     return this.prisma.product.create({
       data: {
-        ...data,
+        ...dto,
         tenantId,
+      },
+    });
+  }
+
+
+  async update(
+    id: string,
+    tenantId: string,
+    dto: UpdateProductDto,
+  ) {
+    await this.findOne(id, tenantId);
+
+    return this.prisma.product.update({
+      where: {
+        id,
+      },
+      data: dto,
+    });
+  }
+
+  async remove(id: string, tenantId: string) {
+    await this.findOne(id, tenantId);
+
+    return this.prisma.product.delete({
+      where: {
+        id,
       },
     });
   }
