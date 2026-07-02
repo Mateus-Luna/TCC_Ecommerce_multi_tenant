@@ -19,54 +19,54 @@ export class ProductsController {
     private readonly productsService: ProductsService,
   ) {}
 
-  @Get()
-  findAll(@Req() req: tenantRequestInterface.TenantRequest) {
-    return this.productsService.findAll(req.user.tenantId);
-  }
+@Get()
+findAll(@Req() req: tenantRequestInterface.TenantRequest) {
+  return this.productsService.findAll(req.tenantId);
+}
 
-  @Get(':id')
-  findOne(
-    @Param('id') id: string,
-    @Req() req: tenantRequestInterface.TenantRequest,
-  ) {
-    return this.productsService.findOne(
-      id,
-      req.user.tenantId,
-    );
-  }
+@Get(':id')
+findOne(
+  @Param('id') id: string,
+  @Req() req: tenantRequestInterface.TenantRequest,
+) {
+  return this.productsService.findOne(
+    id,
+    req.tenantId,
+  );
+}
 
-  @Post()
-  create(
-    @Body() dto: CreateProductDto,
-    @Req() req: tenantRequestInterface.TenantRequest,
-  ) {
-    return this.productsService.create(
-      req.user.tenantId,
-      dto,
-    );
-  }
+@Post()
+create(
+  @Body() dto: CreateProductDto,
+  @Req() req: tenantRequestInterface.TenantRequest,
+) {
+  return this.productsService.create(
+    req.tenantId,
+    dto,
+  );
+}
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() dto: UpdateProductDto,
-    @Req() req: tenantRequestInterface.TenantRequest,
-  ) {
-    return this.productsService.update(
-      id,
-      req.user.tenantId,
-      dto,
-    );
-  }
+@Patch(':id')
+update(
+  @Param('id') id: string,
+  @Body() dto: UpdateProductDto,
+  @Req() req: tenantRequestInterface.TenantRequest,
+) {
+  return this.productsService.update(
+    id,
+    req.tenantId,
+    dto,
+  );
+}
 
-  @Delete(':id')
-  remove(
-    @Param('id') id: string,
-    @Req() req: tenantRequestInterface.TenantRequest,
-  ) {
-    return this.productsService.remove(
-      id,
-      req.user.tenantId,
-    );
-  }
+@Delete(':id')
+remove(
+  @Param('id') id: string,
+  @Req() req: tenantRequestInterface.TenantRequest,
+) {
+  return this.productsService.remove(
+    id,
+    req.tenantId,
+  );
+}
 }

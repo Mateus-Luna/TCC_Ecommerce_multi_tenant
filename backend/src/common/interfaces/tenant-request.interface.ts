@@ -1,8 +1,10 @@
 import { Request } from 'express';
 
 export interface TenantRequest extends Request {
-  user: {
-    userId: string;
-    tenantId: string;
+  tenantId: string;
+
+  user?: {
+    id: string;
+    storeId: string;
   };
 }
