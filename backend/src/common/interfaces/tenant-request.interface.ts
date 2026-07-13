@@ -5,6 +5,7 @@ export interface TenantRequest extends Request {
 
   user?: {
     id: string;
+    role: "ADMIN" | "CUSTOMER";
     storeId: string;
   };
 }

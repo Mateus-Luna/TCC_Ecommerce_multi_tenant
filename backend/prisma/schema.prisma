@@ -15,6 +15,7 @@ model Store {
   updatedAt DateTime  @updatedAt
   Products  Product[]
   users     User[]
+  orders    Order[]
 }
 
 model Product {
@@ -25,16 +26,53 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Store     Store    @relation(fields: [tenantId], references: [id])
+  orderItems OrderItem[]
 
   @@index([tenantId])
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
 }
 
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String
-  storeId   String
+  role      Role     @default(CUSTOMER)
+  storeId   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  store     Store    @relation(fields: [storeId], references: [id])
+  store     Store?    @relation(fields: [storeId], references: [id])
+  orders    Order[]
+}
+
+enum OrderStatus{
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  storeId   String
+  store       Store        @relation(fields: [storeId], references: [id])
+  customerId String
+  customer   User         @relation(fields: [customerId], references: [id])
+  status     OrderStatus  @default(PENDING)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int
+  price      Float
 }

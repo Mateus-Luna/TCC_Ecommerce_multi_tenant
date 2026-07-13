@@ -10,17 +10,31 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
 
-  async register(data: any) {
-    const hashed = await bcrypt.hash(data.password, 10);
+  async registerAdmin(data: any) {
+  const hashed = await bcrypt.hash(data.password, 10);
 
-    return this.prisma.user.create({
-      data: {
-        email: data.email,
-        password: hashed,
-        storeId: data.storeId,
-      },
-    });
-  }
+  return this.prisma.user.create({
+    data: {
+      email: data.email,
+      password: hashed,
+      role: 'ADMIN',
+      storeId: data.storeId,
+    },
+  });
+}
+
+async registerCustomer(data: any) {
+  const hashed = await bcrypt.hash(data.password, 10);
+
+  return this.prisma.user.create({
+    data: {
+      email: data.email,
+      password: hashed,
+      role: 'CUSTOMER',
+      storeId: data.storeId,
+    },
+  });
+}
 
   async login(email: string, password: string) {
     const user = await this.prisma.user.findUnique({
@@ -36,8 +50,9 @@ export class AuthService {
     return {
       access_token: this.jwt.sign({
         sub: user.id,
-        storeId: user.storeId,
-      }),
-    };
+        role: user.role,
+       // storeId: user.storeId,
+  }),
+};
   }
 }
