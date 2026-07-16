@@ -39,9 +39,17 @@ export default function Login() {
       email,
       password,
     );
-    navigate("/products");
+    const token = localStorage.getItem("token");
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
 
-  }
+      if (payload.role === "ADMIN") {
+        navigate("/products");
+      } else {
+        navigate("/select-store");
+        }
+      }
+    }
 
 
   return (
@@ -82,5 +90,5 @@ export default function Login() {
 
     </form>
 
-  );
-}
+    );
+  }

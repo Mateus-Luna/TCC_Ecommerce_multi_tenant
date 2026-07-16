@@ -1,0 +1,24 @@
+.product-card {
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 16px;
+  width: 250px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-card h3 {
+  margin: 0;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.product-card button {
+  cursor: pointer;
+  padding: 10px;
+}

@@ -1,38 +1,62 @@
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import { useCart } from "../../contexts/cart.context";
 
 export default function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const { totalItems } = useCart();
 
-  const {
-    user,
-    logout,
-  } = useAuth();
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
   return (
+    <header
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "1rem",
+        borderBottom: "1px solid #ccc",
+      }}
+    >
+      <h2>E-commerce Multi-Tenant</h2>
 
-    <header>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1rem",
+        }}
+      >
+        <Link to="/products">
+          Produtos
+      </Link>
 
-      <h2>
-        Multi-Tenant E-commerce
-      </h2>
+      {user?.role === "ADMIN" && (
+        <Link to="/store-orders">
+          Pedidos da Loja
+        </Link>
+      )}
 
-      <div>
+      <Link to="/cart">
+          Carrinho ({totalItems})
+      </Link>
+        <span>{user?.role}</span>
 
-        <span>
+      {user?.role === "CUSTOMER" && (
+        <Link to="/my-orders">
+          Meus Pedidos
+        </Link>
+      )}
 
-          {user?.role}
-
-        </span>
-
-        <button
-          onClick={logout}
-        >
+        <button onClick={handleLogout}>
           Sair
         </button>
-
       </div>
-
     </header>
-
   );
-
 }

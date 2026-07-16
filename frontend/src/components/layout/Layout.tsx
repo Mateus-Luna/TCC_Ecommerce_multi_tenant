@@ -1,29 +1,24 @@
 import type { ReactNode } from "react";
-
 import Navbar from "./Navbar";
 
-interface Props {
+interface LayoutProps {
   children: ReactNode;
 }
 
 export default function Layout({
   children,
-}: Props) {
-
+}: LayoutProps) {
   return (
-
     <>
-
       <Navbar />
 
-      <main>
-
+      <main
+        style={{
+          padding: "2rem",
+        }}
+      >
         {children}
-
       </main>
-
     </>
-
   );
-
 }

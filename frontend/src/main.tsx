@@ -7,6 +7,7 @@ import App from "./App";
 
 import { AuthProvider } from "./contexts/auth.contexts";
 import { TenantProvider } from "./contexts/tenant.context";
+import { CartProvider } from "./contexts/cart.context";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -15,7 +16,11 @@ createRoot(document.getElementById("root")!).render(
 
       <TenantProvider>
 
+        <CartProvider>
+
         <App />
+
+        </CartProvider>
 
       </TenantProvider>
 

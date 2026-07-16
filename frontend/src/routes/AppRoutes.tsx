@@ -8,6 +8,10 @@ import {
 import Login from "../pages/Login/Login";
 import Layout from "../components/layout/Layout";
 import Products from "../pages/Products/Products";
+import Cart from "../pages/Cart/Cart";
+import SelectStore from "../pages/SelectStore/SelectStore";
+import MyOrders from "../pages/MyOrders/MyOrders";
+import StoreOrders from "../pages/StoreOrders/StoreOrders";
 
 function StoreSelection() {
   return <h1>Selecionar Loja</h1>;
@@ -28,6 +32,11 @@ export default function AppRoutes() {
         />
 
         <Route
+          path="/select-store"
+          element={<SelectStore />}
+        />
+
+        <Route
           path="*"
           element={<Navigate to="/login" />}
         />
@@ -40,8 +49,23 @@ export default function AppRoutes() {
                 </Layout>
 
             }
+        />
 
-/>
+        <Route
+            path="/cart"
+            element={<Cart />}
+        />
+
+        <Route
+          path="/my-orders"
+          element={<MyOrders />}
+        />
+
+        <Route
+        path="/store-orders"
+        element={<StoreOrders />}
+      />
+
       </Routes>
     </BrowserRouter>
   );
