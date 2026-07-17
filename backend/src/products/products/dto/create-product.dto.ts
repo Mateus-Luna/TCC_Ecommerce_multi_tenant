@@ -3,12 +3,12 @@ import { Type } from 'class-transformer';
 
 export class CreateProductDto {
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(150)
-  name: string;
+    @IsNotEmpty()
+    @MaxLength(150)
+    name!: string;
 
   @Type(() => Number)
-  @IsNumber()
-  @IsPositive()
-  price: number;
+    @IsNumber()
+    @IsPositive()
+    price!: number;
 }

@@ -51,7 +51,7 @@ async registerCustomer(data: any) {
       access_token: this.jwt.sign({
         sub: user.id,
         role: user.role,
-       // storeId: user.storeId,
+        storeId: user.storeId,
   }),
 };
   }

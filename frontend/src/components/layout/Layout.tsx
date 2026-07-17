@@ -12,11 +12,7 @@ export default function Layout({
     <>
       <Navbar />
 
-      <main
-        style={{
-          padding: "2rem",
-        }}
-      >
+      <main className="layout-container">
         {children}
       </main>
     </>

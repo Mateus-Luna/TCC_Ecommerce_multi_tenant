@@ -14,46 +14,33 @@ export default function Navbar() {
   }
 
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "1rem",
-        borderBottom: "1px solid #ccc",
-      }}
-    >
-      <h2>E-commerce Multi-Tenant</h2>
+    <header className="navbar">
+      <h2 className="navbar-logo">E-commerce Multi-Tenant</h2>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1rem",
-        }}
-      >
-        <Link to="/products">
+      <div className="navbar-nav">
+        <Link to="/products" className="navbar-link">
           Produtos
-      </Link>
-
-      {user?.role === "ADMIN" && (
-        <Link to="/store-orders">
-          Pedidos da Loja
         </Link>
-      )}
 
-      <Link to="/cart">
+        {user?.role === "ADMIN" && (
+          <Link to="/store-orders" className="navbar-link">
+            Pedidos da Loja
+          </Link>
+        )}
+
+        <Link to="/cart" className="navbar-link">
           Carrinho ({totalItems})
-      </Link>
-        <span>{user?.role}</span>
-
-      {user?.role === "CUSTOMER" && (
-        <Link to="/my-orders">
-          Meus Pedidos
         </Link>
-      )}
 
-        <button onClick={handleLogout}>
+        {user?.role && <span className="navbar-role">{user?.role}</span>}
+
+        {user?.role === "CUSTOMER" && (
+          <Link to="/my-orders" className="navbar-link">
+            Meus Pedidos
+          </Link>
+        )}
+
+        <button onClick={handleLogout} className="navbar-btn-logout">
           Sair
         </button>
       </div>

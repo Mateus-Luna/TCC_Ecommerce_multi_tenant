@@ -6,10 +6,7 @@ export default function BackButton() {
   return (
     <button
       onClick={() => navigate(-1)}
-      style={{
-        marginBottom: "20px",
-        cursor: "pointer",
-      }}
+      className="back-btn-class"
     >
       ← Voltar
     </button>

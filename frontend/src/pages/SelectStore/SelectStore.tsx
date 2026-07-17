@@ -29,26 +29,15 @@ export default function SelectStore() {
   }
 
   return (
-    <div style={{ padding: "2rem" }}>
-        <BackButton />
+    <div className="store-selection-container">
+      <BackButton />
       <h1>Escolha uma loja</h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="store-grid">
         {stores.map((store) => (
           <div
             key={store.id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "20px",
-              width: "250px",
-            }}
+            className="store-card"
           >
             <h3>{store.name}</h3>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getMyOrders } from "../../services/orders.service";
 import BackButton from "../../components/BackButton/BackButton";
+import { translateOrderStatus } from "../../utils/OrderStatus";
 
 interface OrderItem {
   id: string;
@@ -30,40 +31,74 @@ export default function MyOrders() {
     loadOrders();
   }, []);
 
+  const badgeClasses: Record<string, string> = {
+    PENDING: "badge-pending",
+    PAID: "badge-paid",
+    SHIPPED: "badge-shipped",
+    DELIVERED: "badge-delivered",
+  };
+
   return (
-    <>
+    <div className="layout-container">
       <BackButton />
 
       <h1>Meus Pedidos</h1>
 
       {orders.length === 0 ? (
-        <p>Nenhum pedido encontrado.</p>
+        <div className="empty-state">
+          <p>Nenhum pedido encontrado.</p>
+        </div>
       ) : (
-        orders.map((order) => (
-          <div key={order.id}>
-            <h3>
-              Pedido: {order.id}
-            </h3>
+        <div className="orders-list">
+          {orders.map((order) => (
+            <div
+              key={order.id}
+              className="order-card"
+            >
+              <div className="order-header">
+                <span className="order-id">
+                  Pedido: #{order.id.slice(0, 8)}...
+                </span>
+                <span className={`badge ${badgeClasses[order.status] || ""}`}>
+                  {translateOrderStatus(order.status)}
+                </span>
+              </div>
 
-            <p>
-              Status: {order.status}
-            </p>
-
-            <ul>
-              {order.items.map((item) => (
-                <li key={item.id}>
-                    {item.product.name}
-                    {" - "}
-                    Quantidade: {item.quantity}
-                    {" - "}
-                    R$ {item.price}
+              <div className="order-details-meta">
+                <h4 className="order-products-title">Produtos:</h4>
+                <ul className="order-items-list">
+                  {order.items.map((item) => (
+                    <li
+                      key={item.id}
+                      className="order-item-row"
+                    >
+                      <span className="order-item-name">
+                        {item.product.name}
+                      </span>
+                      <span className="order-item-qty">
+                        x{item.quantity}
+                      </span>
+                      <span className="order-item-price">
+                        R$ {item.price.toFixed(2)}
+                      </span>
                     </li>
-              ))}
-            </ul>
+                  ))}
+                </ul>
+              </div>
 
-          </div>
-        ))
+              <div className="order-footer">
+                <span className="order-total-label">Total:</span>
+                <span className="order-total-value">
+                  R${" "}
+                  {order.items
+                    .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                    .toFixed(2)}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-    </>
+    </div>
   );
 }

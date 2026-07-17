@@ -29,13 +29,7 @@ export default function Products() {
     {products.length === 0 ? (
       <p>Nenhum produto encontrado.</p>
     ) : (
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="grid-container">
         {products.map((product) => (
           <ProductCard
             key={product.id}

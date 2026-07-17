@@ -28,68 +28,70 @@ export default function Cart() {
     }
 
   return (
-    <>
-     <BackButton />
+    <div className="layout-container">
+      <BackButton />
       <h1>Carrinho</h1>
 
       {items.length === 0 ? (
-        <p>Seu carrinho está vazio.</p>
+        <div className="empty-state">
+          <p>Seu carrinho está vazio.</p>
+        </div>
       ) : (
-        <>
-          {items.map((item) => (
-            <div
-              key={item.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "16px",
-                marginBottom: "16px",
-              }}
-            >
-              <h3>{item.name}</h3>
-
-              <p>Quantidade: {item.quantity}</p>
-
-              <p>
-                Valor unitário:
-                {" "}
-                R$ {item.price.toFixed(2)}
-              </p>
-
-              <p>
-                Subtotal:
-                {" "}
-                R$
-                {" "}
-                {(item.price * item.quantity).toFixed(2)}
-              </p>
-
-              <button
-                onClick={() =>
-                  removeItem(item.id)
-                }
+        <div className="cart-content">
+          <div className="cart-items-list">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="cart-item-card"
               >
-                Remover
+                <div className="cart-item-details">
+                  <h3>{item.name}</h3>
+                  <div className="cart-item-meta">
+                    <span>Quantidade: <strong>{item.quantity}</strong></span>
+                    <span>Valor unitário: <strong>R$ {item.price.toFixed(2)}</strong></span>
+                  </div>
+                </div>
+
+                <div className="cart-item-actions">
+                  <div className="cart-item-subtotal">
+                    Subtotal: <strong>R$ {(item.price * item.quantity).toFixed(2)}</strong>
+                  </div>
+                  <button
+                    className="btn-danger"
+                    onClick={() =>
+                      removeItem(item.id)
+                    }
+                  >
+                    Remover
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="cart-summary-panel">
+            <h2>Resumo da Compra</h2>
+            <div className="summary-row">
+              <span>Total:</span>
+              <span className="summary-total-price">
+                R$ {totalPrice.toFixed(2)}
+              </span>
+            </div>
+
+            <div className="summary-actions">
+              <button onClick={handleCheckout}>
+                Finalizar pedido
+              </button>
+              <button
+                className="btn-secondary"
+                onClick={clearCart}
+              >
+                Limpar carrinho
               </button>
             </div>
-          ))}
-
-          <h2>
-            Total:
-            {" "}
-            R$
-            {" "}
-            {totalPrice.toFixed(2)}
-          </h2>
-
-          <button onClick={handleCheckout}>
-            Finalizar pedido
-          </button>
-
-          <button onClick={clearCart}>
-            Limpar carrinho
-          </button>
-        </>
+          </div>
+        </div>
       )}
-    </>
+    </div>
   );
 }

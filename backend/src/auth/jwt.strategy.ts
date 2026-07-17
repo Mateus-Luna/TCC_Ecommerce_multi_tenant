@@ -15,7 +15,7 @@ async validate(payload: any) {
   return {
     id: payload.sub,
     role: payload.role,
-    //storeId: payload.storeId,
+    storeId: payload.storeId,
   };
 }
 }

@@ -53,42 +53,45 @@ export default function Login() {
 
 
   return (
+    <div className="login-page">
+      <form
+        onSubmit={handleSubmit}
+        className="login-card"
+      >
+        <h1 className="login-title">
+          Login
+        </h1>
 
-    <form
-      onSubmit={handleSubmit}
-    >
+        <div className="login-form-group">
+          <div className="login-input-wrapper">
+            <label>E-mail</label>
+            <input
+              type="email"
+              placeholder="Digite seu e-mail"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+            />
+          </div>
 
-      <h1>
-        Login
-      </h1>
+          <div className="login-input-wrapper">
+            <label>Senha</label>
+            <input
+              type="password"
+              placeholder="Digite sua senha"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+            />
+          </div>
 
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) =>
-          setEmail(e.target.value)
-        }
-      />
-
-
-      <input
-        type="password"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) =>
-          setPassword(e.target.value)
-        }
-      />
-
-
-      <button>
-        Entrar
-      </button>
-
-
-    </form>
-
-    );
+          <button style={{ marginTop: "0.5rem" }}>
+            Entrar
+          </button>
+        </div>
+      </form>
+    </div>
+  );
   }

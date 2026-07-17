@@ -6,13 +6,13 @@ import {
   Post,
   Param,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import * as tenantRequestInterface from '../common/interfaces/tenant-request.interface';
-import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
@@ -50,10 +50,12 @@ export class OrdersController {
   updateStatus(
     @Param('id') id: string,
     @Body() dto: UpdateOrderStatusDto,
+    @Req() req: tenantRequestInterface.TenantRequest
   ) {
     return this.ordersService.updateStatus(
       id,
-      dto,
+       req.user!.storeId,
+      dto
     );
   }
 }
