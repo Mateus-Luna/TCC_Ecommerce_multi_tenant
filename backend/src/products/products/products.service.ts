@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -69,10 +70,22 @@ export class ProductsService {
   async remove(id: string, tenantId: string) {
     await this.findOne(id, tenantId);
 
-    return this.prisma.product.delete({
-      where: {
-        id,
-      },
-    });
+  const orderItemsCount = await this.prisma.orderItem.count({
+    where: {
+      productId: id,
+    },
+  });
+
+  if (orderItemsCount > 0) {
+    throw new BadRequestException(
+      'Não é possível excluir um produto que possui pedidos associados.',
+    );
+  }
+
+  return this.prisma.product.delete({
+    where: {
+      id,
+    },
+  });
   }
 }

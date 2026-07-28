@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Patch,
@@ -13,9 +14,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { RolesGuard } from '../../auth/roles.guard';
+import { Roles } from '../../auth/roles.decorator';
 import * as tenantRequestInterface from '../../common/interfaces/tenant-request.interface';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -39,10 +42,12 @@ findOne(
 }
 
 @Post()
+@Roles('ADMIN')
 create(
   @Body() dto: CreateProductDto,
   @Req() req: tenantRequestInterface.TenantRequest,
 ) {
+  this.assertAdminTenant(req);
   return this.productsService.create(
     req.tenantId,
     dto,
@@ -50,11 +55,13 @@ create(
 }
 
 @Patch(':id')
+@Roles('ADMIN')
 update(
   @Param('id') id: string,
   @Body() dto: UpdateProductDto,
   @Req() req: tenantRequestInterface.TenantRequest,
 ) {
+  this.assertAdminTenant(req);
   return this.productsService.update(
     id,
     req.tenantId,
@@ -63,13 +70,21 @@ update(
 }
 
 @Delete(':id')
+@Roles('ADMIN')
 remove(
   @Param('id') id: string,
   @Req() req: tenantRequestInterface.TenantRequest,
 ) {
+  this.assertAdminTenant(req);
   return this.productsService.remove(
     id,
     req.tenantId,
   );
+}
+
+private assertAdminTenant(req: tenantRequestInterface.TenantRequest & { user?: { storeId?: string } }) {
+  if (!req.tenantId || req.user?.storeId !== req.tenantId) {
+    throw new ForbiddenException('Você não pode gerenciar produtos desta loja.');
+  }
 }
 }

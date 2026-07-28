@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsUrl, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, MaxLength } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
@@ -14,6 +14,6 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsString()
-  @IsUrl()
+  @IsString()
   imageUrl?: string;
 }

@@ -10,9 +10,10 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { OrdersModule } from '../orders/orders.module';
 import { DashboardModule } from "../dashboard/dashboard.module";
+import { MasterModule } from '../master/master.module';
 
 @Module({
-  imports: [StoreModule, PrismaModule, ProductsModule, UsersModule, AuthModule, OrdersModule, DashboardModule],
+  imports: [StoreModule, PrismaModule, ProductsModule, UsersModule, AuthModule, OrdersModule, DashboardModule, MasterModule],
   controllers: [AppController],
   providers: [AppService, PrismaService, TenantMiddleware],
 })

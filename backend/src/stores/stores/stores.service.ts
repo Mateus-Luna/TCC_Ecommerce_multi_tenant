@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -40,5 +40,10 @@ export class StoreService {
         id,
       },
     });
+  }
+
+  async updateBanner(id: string, adminStoreId: string | undefined, bannerUrl: string | null) {
+    if (id !== adminStoreId) throw new ForbiddenException('Você não pode alterar esta loja.');
+    return this.prisma.store.update({ where: { id }, data: { bannerUrl } });
   }
 }

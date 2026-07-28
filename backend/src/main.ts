@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import { AuthService } from './auth/auth.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  await app.get(AuthService).ensureMasterAdmin();
 
   app.enableCors({
     origin: 'http://localhost:5173',
