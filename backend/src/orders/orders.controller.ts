@@ -7,6 +7,7 @@ import {
   Param,
   Req,
   UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import { OrdersService } from './orders.service';
@@ -25,6 +26,9 @@ export class OrdersController {
     @Body() dto: CreateOrderDto,
     @Req() req: tenantRequestInterface.TenantRequest,
   ) {
+    if (req.user?.role !== 'CUSTOMER') {
+      throw new ForbiddenException('Apenas clientes podem realizar compras.');
+    }
     return this.ordersService.create(
       req.user!.id,
       req.tenantId,

@@ -2,11 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
 import { useCart } from "../../contexts/cart.context";
+import { useStore } from "../../contexts/store.context";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { totalItems } = useCart();
+  const { store } = useStore();
 
   function handleLogout() {
     logout();
@@ -14,23 +16,52 @@ export default function Navbar() {
   }
 
   return (
-    <header className="navbar">
-      <h2 className="navbar-logo">E-commerce Multi-Tenant</h2>
+    <header
+      style={{
+        background: store?.primaryColor ?? "#2563eb",
+        color: "white",
+        padding: "1rem",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+      >
+      <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+      }}
+    >
+
+      {store?.logoUrl && (
+
+        <img
+          src={store.logoUrl}
+          width={55}
+          height={55}
+          style={{
+            borderRadius: "50%",
+          }}
+        />
+
+      )}
+
+      <div>
+
+        <h2>{store?.name}</h2>
+
+        <small>
+
+          {store?.description}
+
+        </small>
+
+      </div>
+
+    </div>
 
       <div className="navbar-nav">
-        <Link to="/products" className="navbar-link">
-          Produtos
-        </Link>
-
-        {user?.role === "ADMIN" && (
-          <Link to="/store-orders" className="navbar-link">
-            Pedidos da Loja
-          </Link>
-        )}
-
-        <Link to="/cart" className="navbar-link">
-          Carrinho ({totalItems})
-        </Link>
 
         {user?.role && <span className="navbar-role">{user?.role}</span>}
 
@@ -39,8 +70,40 @@ export default function Navbar() {
             Meus Pedidos
           </Link>
         )}
+        <Link to="/products" className="navbar-link">
+          Produtos
+        </Link>
 
-        <button onClick={handleLogout} className="navbar-btn-logout">
+        {user?.role === "ADMIN" && (
+          <Link to="/dashboard" className="navbar-link">
+            Dashboard
+          </Link>
+        )}
+
+        {user?.role === "ADMIN" && (
+          <Link to="/store-orders" className="navbar-link">
+            Pedidos da Loja
+          </Link>
+        )}
+
+        {user?.role === "CUSTOMER" && (
+          <Link to="/cart" className="navbar-link">
+            Carrinho ({totalItems})
+          </Link>
+        )}
+
+
+        <button onClick={handleLogout} className="navbar-btn-logout"
+        style={{
+
+            background: store?.primaryColor,
+            color: "#fff",
+            border: "none",
+            padding: "10px 18px",
+            borderRadius: 8,
+            cursor: "pointer",
+
+        }}>
           Sair
         </button>
       </div>

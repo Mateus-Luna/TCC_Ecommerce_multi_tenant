@@ -1,17 +1,14 @@
+/* === Product Card Base === */
 .product-card {
   background-color: var(--card-background);
   border: 1px solid var(--border);
   border-radius: var(--border-radius-lg);
-  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-  justify-content: space-between;
-  min-height: 220px;
   width: 100%;
 }
 
@@ -21,25 +18,123 @@
   border-color: var(--primary);
 }
 
-.product-card h3 {
+/* === Image Banner === */
+.product-image-banner {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background-color: #f1f5f9;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.product-image-banner--admin {
+  cursor: pointer;
+}
+
+.product-image-banner--admin:hover .product-image-overlay {
+  opacity: 1;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.product-image-banner--admin:hover .product-image {
+  transform: scale(1.04);
+}
+
+/* Placeholder when no image */
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+}
+
+.product-image-placeholder__icon {
+  font-size: 2.5rem;
+  opacity: 0.4;
+}
+
+.product-image-placeholder__text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Hover overlay for admin mode */
+.product-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(37, 99, 235, 0.72);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  backdrop-filter: blur(2px);
+}
+
+.product-image-overlay__icon {
+  font-size: 1.75rem;
+}
+
+.product-image-overlay__text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* === Card Body === */
+.product-card__body {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.product-card__body h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1.4;
 }
 
 .price {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 800;
   color: var(--primary);
   margin: 0;
 }
 
-.product-card button {
+/* === Actions === */
+.product-card__actions {
+  margin-top: 0.25rem;
+}
+
+.product-card__actions button {
   cursor: pointer;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
   border-radius: var(--border-radius);
@@ -49,11 +144,25 @@
   transition: var(--transition);
 }
 
-.product-card button:hover {
+.product-card__actions button:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
 }
 
-.product-card button:active {
+.product-card__actions button:active {
   transform: translateY(0);
+}
+
+/* Edit button (admin mode) */
+.product-edit-btn {
+  background-color: var(--card-background) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.product-edit-btn:hover {
+  background-color: #f1f5f9 !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+  transform: translateY(-1px) !important;
 }

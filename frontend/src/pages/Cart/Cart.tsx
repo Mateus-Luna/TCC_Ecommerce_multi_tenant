@@ -1,14 +1,28 @@
 import BackButton from "../../components/BackButton/BackButton";
 import { useCart } from "../../contexts/cart.context";
 import { createOrder } from "../../services/orders.service";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Cart() {
+  const { user } = useAuth();
   const {
     items,
     totalPrice,
     removeItem,
     clearCart,
   } = useCart();
+
+  if (user?.role === "ADMIN") {
+    return (
+      <div className="layout-container">
+        <BackButton />
+        <div className="empty-state">
+          <h2>Acesso Restrito</h2>
+          <p>Apenas clientes podem acessar o carrinho e realizar compras.</p>
+        </div>
+      </div>
+    );
+  }
 
     async function handleCheckout() {
         try {

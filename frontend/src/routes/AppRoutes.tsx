@@ -12,6 +12,18 @@ import Cart from "../pages/Cart/Cart";
 import SelectStore from "../pages/SelectStore/SelectStore";
 import MyOrders from "../pages/MyOrders/MyOrders";
 import StoreOrders from "../pages/StoreOrders/StoreOrders";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import { useAuth } from "../hooks/useAuth";
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { loading, user } = useAuth();
+
+  if (loading) return null;
+
+  return user?.role === "ADMIN"
+    ? children
+    : <Navigate to="/products" replace />;
+}
 
 function StoreSelection() {
   return <h1>Selecionar Loja</h1>;
@@ -63,8 +75,25 @@ export default function AppRoutes() {
 
         <Route
         path="/store-orders"
-        element={<StoreOrders />}
+        element={
+          <AdminRoute>
+            <Layout>
+              <StoreOrders />
+            </Layout>
+          </AdminRoute>
+        }
       />
+
+        <Route
+          path="/dashboard"
+          element={
+            <AdminRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </AdminRoute>
+          }
+        />
 
       </Routes>
     </BrowserRouter>

@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getStores, type Store } from "../../services/stores.service";
-import { useTenant } from "../../hooks/useTenant";
+import {
+  getStores,
+  type Store,
+} from "../../services/stores.service";import { useTenant } from "../../hooks/useTenant";
 import BackButton from "../../components/BackButton/BackButton";
+
+import {
+  useStore,
+} from "../../contexts/store.context";
 
 export default function SelectStore() {
   const [stores, setStores] = useState<Store[]>([]);
@@ -12,18 +18,23 @@ export default function SelectStore() {
 
   const { setTenantId } = useTenant();
 
-  useEffect(() => {
-    async function loadStores() {
-      const data = await getStores();
+  const { loadStore } =
+  useStore();
 
-      setStores(data);
-    }
+ useEffect(() => {
+  async function loadStores() {
+    const data = await getStores();
 
-    loadStores();
-  }, []);
+    setStores(data);
+  }
 
-  function handleSelect(store: Store) {
+  loadStores();
+}, []);
+
+  async function handleSelect(store: Store) {
     setTenantId(store.id);
+
+    await loadStore(store.id);
 
     navigate("/products");
   }
@@ -40,6 +51,13 @@ export default function SelectStore() {
             className="store-card"
           >
             <h3>{store.name}</h3>
+
+            <p>{store.description}</p>
+
+            <p>{store.email}</p>
+
+            <p>{store.phone}</p>
+
 
             <p>{store.domain}</p>
 

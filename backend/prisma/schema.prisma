@@ -8,14 +8,33 @@ datasource db {
 }
 
 model Store {
-  id        String    @id @default(uuid())
-  name      String
-  domain    String?   @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Products  Product[]
-  users     User[]
-  orders    Order[]
+  id             String   @id @default(uuid())
+
+  name           String
+  domain         String?  @unique
+
+  description    String?
+
+  logoUrl        String?
+
+  bannerUrl      String?
+
+  primaryColor   String   @default("#2563EB")
+
+  secondaryColor String   @default("#F8FAFC")
+
+  phone          String?
+
+  email          String?
+
+  address        String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Products Product[]
+  users    User[]
+  orders   Order[]
 }
 
 model Product {
@@ -23,6 +42,7 @@ model Product {
   tenantId  String
   name      String
   price     Float
+  imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Store     Store    @relation(fields: [tenantId], references: [id])
