@@ -12,6 +12,7 @@ export default function Navbar() {
 
   function handleLogout() {
     logout();
+    localStorage.removeItem("tenantId");
     navigate("/login");
   }
 
@@ -63,16 +64,20 @@ export default function Navbar() {
 
       <div className="navbar-nav">
 
-        {user?.role && <span className="navbar-role">{user?.role}</span>}
+        {user?.role && <span className="navbar-role">{user.role}</span>}
+
+        {user?.role === "MASTER_ADMIN" && (
+          <Link to="/master" className="navbar-link">Gestão de Lojas</Link>
+        )}
 
         {user?.role === "CUSTOMER" && (
           <Link to="/my-orders" className="navbar-link">
             Meus Pedidos
           </Link>
         )}
-        <Link to="/products" className="navbar-link">
+        {user?.role !== "MASTER_ADMIN" && <Link to="/products" className="navbar-link">
           Produtos
-        </Link>
+        </Link>}
 
         {user?.role === "ADMIN" && (
           <Link to="/dashboard" className="navbar-link">

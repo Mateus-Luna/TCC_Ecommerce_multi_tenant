@@ -25,3 +25,8 @@ export async function getStoreById(id: string): Promise<Store> {
 
   return data;
 }
+
+export async function updateStoreBanner(id: string, bannerUrl: string | null): Promise<Store> {
+  const { data } = await api.patch(`/store/${id}/banner`, { bannerUrl });
+  return data;
+}

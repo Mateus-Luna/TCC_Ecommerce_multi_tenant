@@ -10,8 +10,8 @@ import { loginRequest } from "../services/auth.service";
 
 interface JwtPayload {
   sub: string;
-  role: "ADMIN" | "CUSTOMER";
-  storeId: string;
+  role: "ADMIN" | "CUSTOMER" | "MASTER_ADMIN";
+  storeId?: string;
   exp: number;
 }
 

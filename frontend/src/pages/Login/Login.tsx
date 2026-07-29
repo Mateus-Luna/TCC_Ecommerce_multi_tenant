@@ -11,6 +11,7 @@ import {
 } from "../../hooks/useAuth";
 
 import { useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 export default function Login() {
@@ -20,6 +21,7 @@ export default function Login() {
   } = useAuth();
 
   const navigate = useNavigate();
+  const location = useLocation();
 
 
   const [email, setEmail] =
@@ -27,6 +29,8 @@ export default function Login() {
 
   const [password, setPassword] =
     useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
 
   async function handleSubmit(
@@ -35,20 +39,25 @@ export default function Login() {
 
     event.preventDefault();
 
-    await login(
-      email,
-      password,
-    );
+    setError("");
+    setLoading(true);
+    try {
+      await login(email, password);
     const token = localStorage.getItem("token");
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
 
-      if (payload.role === "ADMIN") {
+      if (payload.role === "MASTER_ADMIN") {
+        navigate("/master");
+      } else if (payload.role === "ADMIN") {
         navigate("/products");
       } else {
         navigate("/select-store");
         }
       }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "E-mail ou senha incorretos.");
+    } finally { setLoading(false); }
     }
 
 
@@ -61,6 +70,8 @@ export default function Login() {
         <h1 className="login-title">
           Login
         </h1>
+        {location.state?.message && <p style={{ color: "var(--success, #15803d)" }}>{location.state.message}</p>}
+        {error && <p style={{ color: "var(--error)" }}>{error}</p>}
 
         <div className="login-form-group">
           <div className="login-input-wrapper">
@@ -87,9 +98,10 @@ export default function Login() {
             />
           </div>
 
-          <button style={{ marginTop: "0.5rem" }}>
-            Entrar
+          <button style={{ marginTop: "0.5rem" }} disabled={loading}>
+            {loading ? "Entrando…" : "Entrar"}
           </button>
+          <Link to="/register">Ainda não possui cadastro? Cadastre-se</Link>
         </div>
       </form>
     </div>

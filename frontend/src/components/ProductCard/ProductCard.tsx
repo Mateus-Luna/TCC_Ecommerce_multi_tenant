@@ -10,6 +10,7 @@ export interface ProductCardProps {
   onAddToCart?: (id: string) => void;
   onEdit?: (id: string) => void;
   onImageChange?: (id: string, file: File) => void;
+  onDelete?: (id: string) => void;
 }
 
 export default function ProductCard({
@@ -21,6 +22,7 @@ export default function ProductCard({
   onAddToCart,
   onEdit,
   onImageChange,
+  onDelete,
 }: ProductCardProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -90,13 +92,18 @@ export default function ProductCard({
 
         <div className="product-card__actions">
           {isAdmin ? (
-            <button
-              className="btn-secondary product-edit-btn"
-              onClick={() => onEdit?.(id)}
-              title="Editar produto"
-            >
-              ✏️ Editar
-            </button>
+            <>
+              <button
+                className="btn-secondary product-edit-btn"
+                onClick={() => onEdit?.(id)}
+                title="Editar produto"
+              >
+                ✏️ Editar
+              </button>
+              <button className="btn-secondary product-edit-btn" onClick={() => onDelete?.(id)} title="Excluir produto">
+                🗑️ Excluir
+              </button>
+            </>
           ) : (
             <button onClick={() => onAddToCart?.(id)}>
               Adicionar ao carrinho

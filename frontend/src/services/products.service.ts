@@ -30,4 +30,8 @@ export async function updateProduct(
   const response = await api.patch<Product>(`/products/${id}`, productData);
 
   return response.data;
-}
+}
+
+export async function deleteProduct(id: string) {
+  await api.delete(`/products/${id}`);
+}

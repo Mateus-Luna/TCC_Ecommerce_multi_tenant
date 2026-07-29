@@ -20,3 +20,7 @@ export async function loginRequest(
 
   return response.data;
 }
+
+export async function registerCustomer(data: LoginRequest) {
+  return api.post("/auth/register-customer", data);
+}

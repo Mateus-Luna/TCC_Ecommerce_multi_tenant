@@ -27,18 +27,26 @@ export function TenantProvider({
   const [tenantId, setTenant] =
     useState<string | null>(null);
     
-  useEffect(() => {
+useEffect(() => {
+  // Usuário ainda não carregou
+  if (!user) {
+    return;
+  }
 
-    if (!user) return;
-
+  // Apenas administradores possuem storeId fixo
+  if (user.storeId) {
     setTenant(user.storeId);
+    localStorage.setItem("tenantId", user.storeId);
+    return;
+  }
 
-    localStorage.setItem(
-      "tenantId",
-      user.storeId,
-    );
+  // Clientes mantêm a loja escolhida anteriormente
+  const savedTenant = localStorage.getItem("tenantId");
 
-  }, [user]);
+  if (savedTenant) {
+    setTenant(savedTenant);
+  }
+}, [user]);
 
   function setTenantId(id: string) {
 

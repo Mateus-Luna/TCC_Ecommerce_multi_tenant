@@ -4,13 +4,14 @@ import {
   createProduct,
   updateProduct,
   type Product,
+  deleteProduct,
 } from "../../services/products.service";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import { useCart } from "../../contexts/cart.context";
 import BackButton from "../../components/BackButton/BackButton";
 import { useStore } from "../../contexts/store.context";
 import { useAuth } from "../../hooks/useAuth";
-
+import { updateStoreBanner } from "../../services/stores.service";
 // ─── Edit Modal ──────────────────────────────────────────────────────────────
 
 interface EditModalProps {
@@ -125,10 +126,14 @@ function EditModal({ product, onClose, onSaved }: EditModalProps) {
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const { addItem } = useCart();
+  const { items } = useCart();
   const { store } = useStore();
   const { user } = useAuth();
 
   const isAdmin = user?.role === "ADMIN";
+  console.log("USER:", user);
+  console.log("IS ADMIN:", isAdmin);
+  console.log("STORE:", store);
 
   // Add product form
   const [showAddForm, setShowAddForm] = useState(false);
@@ -152,7 +157,36 @@ export default function Products() {
     fetchProducts();
   }, []);
 
-  // ── Add Product ──────────────────────────────────────────────────────────
+  async function handleBannerChange(
+      e: React.ChangeEvent<HTMLInputElement>
+    ) {
+      const file = e.target.files?.[0];
+
+      if (!file || !store) return;
+
+      const reader = new FileReader();
+
+      reader.onload = async () => {
+        try {
+          const dataUrl = reader.result as string;
+
+          await updateStoreBanner(
+            store.id,
+            dataUrl
+          );
+
+          window.location.reload();
+        } catch {
+          alert("Erro ao atualizar banner.");
+        }
+      };
+
+      reader.readAsDataURL(file);
+
+      e.target.value = "";
+    }
+
+    // ── Add Product ──────────────────────────────────────────────────────────
   async function handleCreateProduct(e: React.FormEvent) {
     e.preventDefault();
     setAddError("");
@@ -191,6 +225,28 @@ export default function Products() {
     setEditingProduct(null);
   }
 
+  async function handleDeleteProduct(id: string) {
+  const confirmed = window.confirm(
+    "Tem certeza que deseja excluir este produto?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await deleteProduct(id);
+
+    setProducts((prev) =>
+      prev.filter((product) => product.id !== id)
+    );
+  } catch (error) {
+    alert(
+      "Não foi possível excluir o produto. Ele pode estar associado a pedidos."
+    );
+  }
+}
+
+    
+
   // ── Image Upload ─────────────────────────────────────────────────────────
   async function handleImageChange(productId: string, file: File) {
     setUploadingId(productId);
@@ -214,6 +270,30 @@ export default function Products() {
   return (
     <>
       <BackButton />
+
+      {isAdmin && store && (
+        <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+          <button onClick={() => bannerInputRef.current?.click()}>
+            🖼️ {store.bannerUrl ? "Alterar banner" : "Adicionar banner"}
+          </button>
+          {store.bannerUrl && (
+            <button
+              className="btn-secondary"
+              onClick={async () => {
+                try {
+                  await updateStoreBanner(store.id, null);
+                  window.location.reload();
+                } catch {
+                  alert("Erro ao remover banner.");
+                }
+              }}
+            >
+              🗑️ Remover banner
+            </button>
+          )}
+        </div>
+      )}
+
 
       {/* Store Banner */}
       {store?.bannerUrl && (
@@ -395,6 +475,7 @@ export default function Products() {
                   if (p) setEditingProduct(p);
                 }}
                 onImageChange={handleImageChange}
+                onDelete={handleDeleteProduct}
               />
             </div>
           ))}
@@ -410,8 +491,29 @@ export default function Products() {
         />
       )}
 
-      {/* Hidden banner file input (unused but kept for future banner upload) */}
-      <input ref={bannerInputRef} type="file" accept="image/*" style={{ display: "none" }} />
+      {/* Hidden file inputs */}
+      <input
+        ref={bannerInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const file = e.currentTarget.files?.[0];
+          if (file && store) {
+            try {
+              const reader = new FileReader();
+              reader.onload = async (ev) => {
+                const dataUrl = ev.target?.result as string;
+                await updateStoreBanner(store.id, dataUrl);
+                window.location.reload();
+              };
+              reader.readAsDataURL(file);
+            } catch {
+              alert("Erro ao fazer upload do banner.");
+            }
+          }
+        }}
+      />
     </>
   );
 }

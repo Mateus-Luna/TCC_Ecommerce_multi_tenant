@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 
 import Login from "../pages/Login/Login";
+import Register from "../pages/Register/Register";
+import Master from "../pages/Master/Master";
 import Layout from "../components/layout/Layout";
 import Products from "../pages/Products/Products";
 import Cart from "../pages/Cart/Cart";
@@ -14,6 +16,8 @@ import MyOrders from "../pages/MyOrders/MyOrders";
 import StoreOrders from "../pages/StoreOrders/StoreOrders";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminRoute({ children }: { children: React.ReactNode }) {
   const { loading, user } = useAuth();
@@ -24,6 +28,13 @@ function AdminRoute({ children }: { children: React.ReactNode }) {
     ? children
     : <Navigate to="/products" replace />;
 }
+
+function MasterRoute({ children }: { children: React.ReactNode }) {
+  const { loading, user } = useAuth();
+  if (loading) return null;
+  return user?.role === "MASTER_ADMIN" ? children : <Navigate to="/login" replace />;
+}
+
 
 function StoreSelection() {
   return <h1>Selecionar Loja</h1>;
@@ -37,6 +48,8 @@ export default function AppRoutes() {
           path="/login"
           element={<Login />}
         />
+        <Route path="/register" element={<Register />} />
+        <Route path="/master" element={<MasterRoute><Master /></MasterRoute>} />
 
         <Route
           path="/stores"
